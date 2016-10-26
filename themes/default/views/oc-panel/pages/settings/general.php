@@ -3,7 +3,7 @@
 
  <?=Form::errors()?>
 <div class="page-header">
-	<h1><?=__('General Configuration')?></h1>
+    <h1><?=__('General Configuration')?></h1>
     <p>
         <a class="btn btn-default pull-right" href="<?=Route::url('oc-panel',array('controller'=>'config'))?>"><?=__('All configurations')?></a>
         <?=__('General site settings.')?>
@@ -17,7 +17,7 @@
                 <div class="panel-body">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <?= FORM::label($forms['maintenance']['key'], "<a target='_blank' href='http://open-classifieds.com/2013/10/11/activate-access-terms-alert/'>".__("Maintenance Mode")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['maintenance']['key']))?>
+                            <?= FORM::label($forms['maintenance']['key'], "<a target='_blank' href='https://docs.open-eshop.com/activate-maintenance-mode/'>".__("Maintenance Mode")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['maintenance']['key']))?>
                             <div class="col-md-8">
                                 <div class="onoffswitch">
                                     <?= FORM::hidden($forms['maintenance']['key'], 0);?>
@@ -37,7 +37,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <?= FORM::label($forms['disallowbots']['key'], __("Disallows Robots on this website"), array('class'=>'control-label col-sm-4', 'for'=>$forms['disallowbots']['key']))?>
+                            <?= FORM::label($forms['disallowbots']['key'], "<a target='_blank' href='https://docs.open-eshop.com/allow-disallow-bots-crawlers/'>".__("Disallows Robots on this website")."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['disallowbots']['key']))?>
                             <div class="col-sm-8">
                                 <div class="onoffswitch">
                                     <?= Form::checkbox($forms['disallowbots']['key'], 1, (bool) $forms['disallowbots']['value'], array(
@@ -75,7 +75,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="control-label col-sm-4"><?=__("Time Zone")?>:</label>                
+                            <label class="control-label col-sm-4"><?="<a target='_blank' href='https://docs.open-eshop.com/change-timezone/'>".__("Time Zone")."</a>"?>:</label>                
                             <div class="col-sm-8">
                             <?= FORM::select($i18n['timezone']['key'], Date::get_timezones(), core::request('TIMEZONE',date_default_timezone_get()), array(
                                     'placeholder' => "Madrid [+1:00]", 
@@ -86,7 +86,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <?= FORM::label($forms['landing_page']['key'], __('Landing page'), array('class'=>'control-label col-sm-4', 'for'=>$forms['landing_page']['key']))?>
+                            <?= FORM::label($forms['landing_page']['key'], "<a target='_blank' href='https://docs.open-eshop.com/landing-page/'>".__('Landing page')."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['landing_page']['key']))?>
                             <div class="col-md-8">
                                 <?= FORM::select($forms['landing_page']['key'], array('{"controller":"home","action":"index"}'=>'HOME','{"controller":"product","action":"listing"}'=>'LISTING'), $forms['landing_page']['value'], array(
                                 'class' => 'tips form-control input-sm', 
@@ -99,6 +99,57 @@
                                 ))?> 
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <?= FORM::label($forms['private_site']['key'], '<a target="_blank" href="https://docs.yclas.com/private-site/">'.__("Private Site")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['private_site']['key']))?>
+                            <div class="col-md-8">
+                                <div class="onoffswitch">
+                                    <?= FORM::hidden($forms['private_site']['key'], 0);?>
+                                    <?= FORM::checkbox($forms['private_site']['key'], 1, (bool) $forms['private_site']['value'], array(
+                                    'placeholder' => "TRUE or FALSE", 
+                                    'class' => 'onoffswitch-checkbox', 
+                                    'id' => $forms['private_site']['key'], 
+                                    'data-content'=> __("Private site option"),
+                                    'data-trigger'=>"hover",
+                                    'data-placement'=>"right",
+                                    'data-toggle'=>"popover",
+                                    'data-original-title'=>__("Private Site"),
+                                    ))?>
+                                    <?= FORM::label($forms['private_site']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['private_site']['key']))?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <?= FORM::label($forms['private_site_page']['key'], "<a target='_blank' href=''>".__('Private Site landing page content')."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['private_site_page']['key']))?>
+                            <div class="col-md-8">
+                                <?= FORM::select($forms['private_site_page']['key'], $pages, $forms['private_site_page']['value'], array(
+                                'class' => 'tips form-control input-sm', 
+                                'id' => $forms['private_site_page']['key'], 
+                                'data-content'=> __("Private Site landing page content"),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>__("Private Site landing page conten"),
+                                ))?> 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <?= FORM::label($forms['api_key']['key'], "<a target='_blank' href='https://docs.open-eshop.com/api-documentation/'>".__('API Key')."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['api_key']['key']))?>
+                            <div class="col-md-8">
+                                <?= FORM::input($forms['api_key']['key'], $forms['api_key']['value'], array(
+                                'placeholder' => "", 
+                                'class' => 'tips form-control input-sm', 
+                                'id' => $forms['api_key']['key'],
+                                'data-content'=> __("Integrate anything using your site API Key."),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"bottom",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>__("Installation API Key"), 
+                                ))?> 
+                            </div>
+                    </div>
                         
                         <div class="form-group">
                             <?= FORM::label($forms['site_name']['key'], __('Site name'), array('class'=>'col-md-4 control-label', 'for'=>$forms['site_name']['key']))?>
@@ -216,8 +267,8 @@
                             </div>
                         </div>
                         
-                        <div class="form-group">		
-                                <?= FORM::label($forms['number_format']['key'], "<a target='_blank' href='http://open-classifieds.com/2013/08/06/how-to-currency-format/'>".__('Money format')."</a>", array('class'=>'col-md-4 control-label','for'=>$forms['number_format']['key']))?>
+                        <div class="form-group">        
+                                <?= FORM::label($forms['number_format']['key'], "<a target='_blank' href='https://docs.open-eshop.com/change-currency/'>".__('Money format')."</a>", array('class'=>'col-md-4 control-label','for'=>$forms['number_format']['key']))?>
                             <div class="col-md-8">
                                 <?= FORM::input($forms['number_format']['key'], $forms['number_format']['value'], array(
                                 'placeholder' => "20", 
@@ -508,7 +559,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <?= FORM::label($forms['blog']['key'], __("Activates Blog posting"), array('class'=>'col-md-4 control-label', 'for'=>$forms['blog']['key']))?>
+                            <?= FORM::label($forms['blog']['key'], '<a target="_blank" href="https://docs.open-eshop.com/create-blog/">'.__("Activates Blog posting")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['blog']['key']))?>
                             <div class="col-md-8">
                                 <div class="onoffswitch">
                                     <?= FORM::hidden($forms['blog']['key'], 0);?>
@@ -544,7 +595,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <?= FORM::label($forms['faq']['key'], __("Activates FAQ"), array('class'=>'col-md-4 control-label', 'for'=>$forms['faq']['key']))?>
+                            <?= FORM::label($forms['faq']['key'], '<a target="_blank" href="https://docs.open-eshop.com/create-faq-system/">'.__("Activates FAQ")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['faq']['key']))?>
                             <div class="col-md-8">
                                 <div class="onoffswitch">
                                     <?= FORM::hidden($forms['faq']['key'], 0);?>
@@ -580,7 +631,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <?= FORM::label($forms['forums']['key'], __("Activates Forums"), array('class'=>'col-md-4 control-label', 'for'=>$forms['forums']['key']))?>
+                            <?= FORM::label($forms['forums']['key'], '<a target="_blank" href="https://docs.open-eshop.com/add-forum/">'.__("Activates Forums")."</a>", array('class'=>'col-md-4 control-label', 'for'=>$forms['forums']['key']))?>
                             <div class="col-md-8">
                                 <div class="onoffswitch">
                                     <?= FORM::hidden($forms['forums']['key'], 0);?>
@@ -693,105 +744,86 @@
                     </div>
                 </div>
             </div>
+            
             <div class="panel panel-default">
-                <div class="panel-heading"><?=__("Amazon S3 Configuration")?></div>
+                <div class="panel-heading"><?=__("Captcha Configuration")?></div>
                 <div class="panel-body">
                     <div class="form-horizontal">
-                        
                         <div class="form-group">
-                            <?= FORM::label($forms_img['aws_s3_active']['key'], __('Amazon S3 active'), array('class'=>'control-label col-sm-4', 'for'=>$forms_img['aws_s3_active']['key']))?>
+                            <?= FORM::label($forms['captcha']['key'], __("Enable captcha"), array('class'=>'control-label col-sm-4', 'for'=>$forms['captcha']['key']))?>
                             <div class="col-sm-8">
                                 <div class="onoffswitch">
-                                    <?= FORM::hidden($forms_img['aws_s3_active']['key'], 0);?>
-                                    <?= Form::checkbox($forms_img['aws_s3_active']['key'], 1, (bool) $forms_img['aws_s3_active']['value'], array(
+                                    <?= FORM::hidden($forms['captcha']['key'], 0);?>
+                                    <?= Form::checkbox($forms['captcha']['key'], 1, (bool) $forms['captcha']['value'], array(
                                     'placeholder' => __("TRUE or FALSE"), 
                                     'class' => 'onoffswitch-checkbox', 
-                                    'id' => $forms_img['aws_s3_active']['key'], 
-                                    'data-content'=> __('Amazon S3 active'),
+                                    'id' => $forms['captcha']['key'], 
+                                    'data-content'=> __("If advertisement is marked as spam, user is also marked. Can not publish new ads or register until removed from Black List! Also will not allow users from disposable email addresses to register."),
                                     'data-trigger'=>"hover",
                                     'data-placement'=>"right",
                                     'data-toggle'=>"popover",
-                                    'data-original-title'=>'',
+                                    'data-original-title'=>__("Black List"),
                                     ))?>
-                                    <?= FORM::label($forms_img['aws_s3_active']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms_img['aws_s3_active']['key']))?>
+                                    <?= FORM::label($forms['captcha']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['captcha']['key']))?>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <?= FORM::label($forms_img['aws_access_key']['key'], __('AWS Access Key'), array('class'=>'control-label col-sm-4', 'for'=>$forms_img['aws_access_key']['key']))?>
+                            <?= FORM::label($forms['recaptcha_active']['key'], "<a target='_blank' href='https://www.google.com/recaptcha/intro/index.html'>".__("Enable reCAPTCHA as captcha provider")."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['recaptcha_active']['key']))?>
                             <div class="col-sm-8">
-                                <?= FORM::input($forms_img['aws_access_key']['key'], $forms_img['aws_access_key']['value'], array(
-                                'placeholder' => '', 
-                                'class' => 'tips form-control', 
-                                'id' => $forms_img['aws_access_key']['key'], 
-                                'data-content'=> __('AWS Access Key'),
-                                'data-trigger'=>"hover",
-                                'data-placement'=>"right",
-                                'data-toggle'=>"popover",
-                                'data-original-title'=>'',              
-                                ))?> 
+                                <div class="onoffswitch">
+                                    <?= FORM::hidden($forms['recaptcha_active']['key'], 0);?>
+                                    <?= Form::checkbox($forms['recaptcha_active']['key'], 1, (bool) $forms['recaptcha_active']['value'], array(
+                                    'placeholder' => __("TRUE or FALSE"), 
+                                    'class' => 'onoffswitch-checkbox', 
+                                    'id' => $forms['recaptcha_active']['key'], 
+                                    'data-content'=> __("If advertisement is marked as spam, user is also marked. Can not publish new ads or register until removed from Black List! Also will not allow users from disposable email addresses to register."),
+                                    'data-trigger'=>"hover",
+                                    'data-placement'=>"right",
+                                    'data-toggle'=>"popover",
+                                    'data-original-title'=>__("Black List"),
+                                    ))?>
+                                    <?= FORM::label($forms['recaptcha_active']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['recaptcha_active']['key']))?>
+                                </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <?= FORM::label($forms_img['aws_secret_key']['key'], __('AWS Secret Key'), array('class'=>'control-label col-sm-4', 'for'=>$forms_img['aws_secret_key']['key']))?>
+                            <?= FORM::label($forms['recaptcha_sitekey']['key'], "<a target='_blank' href='https://www.google.com/recaptcha/admin#list'>".__('reCAPTCHA Site Key')."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['recaptcha_sitekey']['key']))?>
                             <div class="col-sm-8">
-                                <?= FORM::input($forms_img['aws_secret_key']['key'], $forms_img['aws_secret_key']['value'], array(
+                                <?= FORM::input($forms['recaptcha_sitekey']['key'], $forms['recaptcha_sitekey']['value'], array(
                                 'placeholder' => "", 
-                                'class' => 'tips form-control', 
-                                'id' => $forms_img['aws_secret_key']['key'], 
-                                'data-content'=> __('AWS Secret Key'),
+                                'class' => 'tips form-control input-sm', 
+                                'id' => $forms['recaptcha_sitekey']['key'], 
+                                'data-original-title'=> __("reCaptcha Site Key"),
                                 'data-trigger'=>"hover",
                                 'data-placement'=>"right",
                                 'data-toggle'=>"popover",
-                                'data-original-title'=>'',          
+                                'data-content'=>__("You need to write reCAPTCHA Site Key to enable the service."),
                                 ))?> 
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <?= FORM::label($forms_img['aws_s3_bucket']['key'], __('Amazon S3 Bucket Name'), array('class'=>'control-label col-sm-4', 'for'=>$forms_img['aws_s3_bucket']['key']))?>
+                            <?= FORM::label($forms['recaptcha_secretkey']['key'], "<a target='_blank' href='https://www.google.com/recaptcha/admin#list'>".__('reCAPTCHA Secret Key')."</a>", array('class'=>'control-label col-sm-4', 'for'=>$forms['recaptcha_secretkey']['key']))?>
                             <div class="col-sm-8">
-                                <?= FORM::input($forms_img['aws_s3_bucket']['key'], $forms_img['aws_s3_bucket']['value'], array(
+                                <?= FORM::input($forms['recaptcha_secretkey']['key'], $forms['recaptcha_secretkey']['value'], array(
                                 'placeholder' => "", 
-                                'class' => 'tips form-control', 
-                                'id' => $forms_img['aws_s3_bucket']['key'], 
-                                'data-content'=> __('Amazon S3 Bucket Name'),
+                                'class' => 'tips form-control input-sm', 
+                                'id' => $forms['recaptcha_secretkey']['key'], 
+                                'data-original-title'=> __("reCaptcha Secret Key"),
                                 'data-trigger'=>"hover",
                                 'data-placement'=>"right",
                                 'data-toggle'=>"popover",
-                                'data-original-title'=>'',          
-                                ))?> 
-                            </div>
-                        </div>
-                        
-                        <?  if (($aws_s3_domain = strpos($forms_img['aws_s3_domain']['value'], 's3.amazonaws.com')) !== FALSE) 
-                                $forms_img['aws_s3_domain']['value'] = ($aws_s3_domain > 0) ? 'bn-s3' : 's3-bn';
-                        ?>
-                        
-                        <div class="form-group">
-                            <?= FORM::label($forms_img['aws_s3_domain']['key'], __('S3 Domain Name'), array('class'=>'control-label col-sm-4', 'for'=>$forms_img['aws_s3_domain']['key']))?>
-                            <div class="col-sm-8">
-                                <?= FORM::select($forms_img['aws_s3_domain']['key'], array( 'bn'    =>"bucket_name",
-                                                                                        'bn-s3' =>"bucket_name.s3.amazonaws.com",
-                                                                                        's3-bn' =>"s3.amazonaws.com/bucket_name"), 
-                                $forms_img['aws_s3_domain']['value'], array(
-                                'placeholder' => $forms_img['aws_s3_domain']['value'], 
-                                'class' => 'tips form-control input-sm ', 
-                                'id' => $forms_img['aws_s3_domain']['key'],
-                                'data-content'=> __("Amazon S3 Domain Name"),
-                                'data-trigger'=>"hover",
-                                'data-placement'=>"right",
-                                'data-toggle'=>"popover",
-                                'data-original-title'=>__("S3 Domain Name"), 
+                                'data-content'=>__("You need to write your reCAPTCHA Secret Key to enable the service."),
                                 ))?> 
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-sm-8 col-sm-offset-4">

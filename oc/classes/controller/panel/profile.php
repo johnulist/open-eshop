@@ -75,15 +75,15 @@ class Controller_Panel_Profile extends Auth_Controller {
 
 	public function action_image()
 	{
-		//get image
-		$image = $_FILES['profile_image']; //file post
-        
         if (Core::post('photo_delete') AND Auth::instance()->get_user()->delete_image()==TRUE )
         {
             Alert::set(Alert::SUCCESS, __('Photo deleted.'));
             $this->redirect(Route::url('oc-panel',array('controller'=>'profile', 'action'=>'edit')));
 
         }// end of photo delete
+        
+		//get image
+		$image = $_FILES['profile_image']; //file post
 
         if ( 
             ! Upload::valid($image) OR
@@ -287,10 +287,15 @@ class Controller_Panel_Profile extends Auth_Controller {
 
         $user = Auth::instance()->get_user();
         $id_order = $this->request->param('id');
+        
         $order = new Model_Order;
-        $order = $order->where('id_user', '=', $user->id_user)
-                        ->where('id_order', '=', $id_order)
-                        ->find();
+        $order->where('id_order', '=', $id_order);
+
+        //if admin we do not verify the user
+        if ($user->id_role!=Model_Role::ROLE_ADMIN)
+            $order->where('id_user','=',$user->id_user);
+
+        $order->find();
 
         if( ! $order->loaded() )
         {
@@ -612,5 +617,40 @@ class Controller_Panel_Profile extends Auth_Controller {
 
 
         
+    }
+
+    //2 step auth verification code generation
+    public function action_2step()
+    {
+        $action = $this->request->param('id');
+
+
+        if ($action == 'enable')
+        {
+            //load library
+            require Kohana::find_file('vendor', 'GoogleAuthenticator');
+            $ga = new PHPGangsta_GoogleAuthenticator();
+            $this->user->google_authenticator = $ga->createSecret();
+
+            //set cookie
+            Cookie::set('google_authenticator' , $this->user->id_user, Core::config('auth.lifetime') );
+
+            Alert::set(Alert::SUCCESS, __('2 Step Authentication Enabled'));
+        }
+        elseif($action == 'disable')
+        {
+            $this->user->google_authenticator = '';
+            Cookie::delete('google_authenticator');
+            Alert::set(Alert::INFO, __('2 Step Authentication Disabled'));
+        }
+
+        try {
+            $this->user->save();
+        } catch (Exception $e) {
+            //throw 500
+            throw HTTP_Exception::factory(500,$e->getMessage());
+        }   
+
+        $this->redirect(Route::url('oc-panel', array('controller'=>'profile','action'=>'edit')));
     }
 }

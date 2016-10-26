@@ -322,7 +322,7 @@ class Controller_Product extends Controller{
             ))->route_params(array(
                     'controller'        => $this->request->controller(),
                     'action'            => $this->request->action(),
-                    'category'          => ($category!==NULL)?$category->seoname:NULL,
+                    'category'          => ($category!==NULL)?$category->seoname:URL::title(__('all')),
             ));
            
             Breadcrumbs::add(Breadcrumb::factory()->set_title(__("Page ").$pagination->current_page));
@@ -543,7 +543,10 @@ class Controller_Product extends Controller{
             $order = new Model_Order($id_order);
             
             if ($order->loaded() AND $order->id_user == $user->id_user AND $order->status == Model_Order::STATUS_CREATED)
-            {                
+            {              
+                //hack jquery paymill
+                Paymill::jquery();
+  
                 //verify the coupon and check order against user information, if its different update order info and maybe price!
                 $order->check_pricing();
                 

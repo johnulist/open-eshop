@@ -398,6 +398,15 @@ div.sceditor-group{padding: 1px 15px 5px 5px!important;}
   text-shadow: none !important;
   font-size: 14px !important;
 }
+
+.social-providers.list-inline > li {
+  padding: 5px;
+}
+
+/* selectpicker dropdown menu*/
+.bootstrap-select > .dropdown-toggle{width:auto;}
+.bootstrap-select.btn-group .dropdown-menu {min-width:auto;}
+
 /*================= Media Queries ==========================*/
 
 
@@ -424,4 +433,11 @@ body { padding-top:0; }
 .pages li a { display:block; padding-left:10px; }
 .pages li a:hover { background:#ededed; }
 .navbar-collapse.bs-navbar-collapse.collapse{padding-left: 0px;padding-right: 0px;}
+}
+
+@media only screen and (max-width : 480px) {
+  .modal-body{
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
 }

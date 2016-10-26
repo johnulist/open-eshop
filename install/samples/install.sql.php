@@ -64,13 +64,14 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS  `".core::request('TABLE_PREFIX')
   `city` VARCHAR(65) NULL DEFAULT NULL,
   `postal_code` VARCHAR(20) NULL DEFAULT NULL,
   `address` VARCHAR(150) NULL DEFAULT NULL,
+  `google_authenticator` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `".core::request('TABLE_PREFIX')."users_UK_email` (`email`),
   UNIQUE KEY `".core::request('TABLE_PREFIX')."users_UK_token` (`token`),
   UNIQUE KEY `".core::request('TABLE_PREFIX')."users_UK_api_token` (`api_token`),
   UNIQUE KEY `".core::request('TABLE_PREFIX')."users_UK_seoname` (`seoname`),
   UNIQUE KEY `".core::request('TABLE_PREFIX')."users_UK_provider_AND_uid` (`hybridauth_provider_name`,`hybridauth_provider_uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=".core::request('DB_CHARSET').";");
+) ENGINE=MyISAM DEFAULT CHARSET=".core::request('DB_CHARSET').";");
 
 
 mysqli_query($link,"CREATE TABLE IF NOT EXISTS  `".core::request('TABLE_PREFIX')."categories` (
@@ -86,7 +87,7 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS  `".core::request('TABLE_PREFIX')
   `has_image` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_category`) USING BTREE,
   UNIQUE KEY `".core::request('TABLE_PREFIX')."categories_UK_seo_name` (`seoname`)
-) ENGINE=InnoDB DEFAULT CHARSET=".core::request('DB_CHARSET').";");
+) ENGINE=MyISAM DEFAULT CHARSET=".core::request('DB_CHARSET').";");
 
 
 mysqli_query($link,"CREATE TABLE IF NOT EXISTS `".core::request('TABLE_PREFIX')."visits` (
@@ -105,7 +106,7 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS `".core::request('TABLE_PREFIX').
 mysqli_query($link,"CREATE TABLE IF NOT EXISTS `".core::request('TABLE_PREFIX')."config` ( 
   `group_name` VARCHAR(128)  NOT NULL, 
   `config_key` VARCHAR(128)  NOT NULL, 
-  `config_value` TEXT,
+  `config_value` LONGTEXT,
    PRIMARY KEY (`config_key`),
    UNIQUE KEY `".core::request('TABLE_PREFIX')."config_IK_group_name_AND_config_key` (`group_name`,`config_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=".core::request('DB_CHARSET')." ;");
@@ -117,7 +118,7 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS `".core::request('TABLE_PREFIX').
   `order` int(2) unsigned NOT NULL DEFAULT '0',
   `title` varchar(145) NOT NULL,
   `seotitle` varchar(145) NOT NULL,
-  `description` TEXT NULL,
+  `description` LONGTEXT NULL,
   `from_email` varchar(145) NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `type` enum('page','email','help') NOT NULL,
@@ -166,17 +167,20 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS  `".core::request('TABLE_PREFIX')
   `id_user` int(10) unsigned NOT NULL,
   `id_product` int(10) unsigned NULL,
   `id_coupon` int(10) unsigned NULL,
-  `paymethod` varchar(20) DEFAULT NULL,
+  `paymethod` VARCHAR(20) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `currency` char(3) NOT NULL,
-  `amount` decimal(14,3) NOT NULL DEFAULT '0',
+  `amount` DECIMAL(14,3) NOT NULL DEFAULT '0',
+  `amount_net` DECIMAL(14,3) NOT NULL DEFAULT '0',
+  `gateway_fee` DECIMAL(14,3) NOT NULL DEFAULT '0',
   `ip_address` bigint DEFAULT NULL,
-  `txn_id` varchar(255) DEFAULT NULL,
+  `txn_id` VARCHAR(255) DEFAULT NULL,
   `pay_date` DATETIME  NULL,
   `support_date` DATETIME  NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `notes` VARCHAR( 245 ) NULL DEFAULT NULL,
-  `VAT` decimal(14,3) NOT NULL DEFAULT '0.000',
+  `VAT` DECIMAL(14,3) NOT NULL DEFAULT '0.000',
+  `VAT_amount`  DECIMAL(14,3) NOT NULL DEFAULT '0',
   `VAT_number` VARCHAR(65) NULL DEFAULT NULL,
   `country` VARCHAR(3) NULL DEFAULT NULL,
   `city` VARCHAR(65) NULL DEFAULT NULL,
@@ -195,6 +199,7 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS `".core::request('TABLE_PREFIX').
   `id_order` int(10) unsigned NOT NULL,
   `license` varchar(40) DEFAULT NULL,
   `domain` varchar(255) DEFAULT NULL,
+  `device_id` varchar(255) DEFAULT NULL,
   `ip_address` bigint DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active_date` DATETIME  NULL,
@@ -263,7 +268,7 @@ mysqli_query($link,"CREATE TABLE IF NOT EXISTS  `".core::request('TABLE_PREFIX')
   `id_forum` int(10) unsigned NULL DEFAULT NULL,
   `title` varchar(245) NOT NULL,
   `seotitle` varchar(245) NOT NULL,
-  `description` text NOT NULL,
+  `description` longtext NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip_address` bigint DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
@@ -350,7 +355,7 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."content` (`ord
     VALUES
 (0, 'Change Password [SITE.NAME]', 'auth-remember', 'Hello [USER.NAME],\n\nFollow this link  [URL.QL]\n\nThanks!!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'Welcome to [SITE.NAME]!', 'auth-register', 'Welcome [USER.NAME],\n\nWe are really happy that you have joined us! [URL.QL]\n\nRemember your user details:\nEmail: [USER.EMAIL]\nPassword: [USER.PWD]\n\nWe do not have your original password anymore.\n\nRegards!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
-(0, '[EMAIL.SENDER] wants to contact you!', 'contact-admin', 'Hello Admin,\n\n [EMAIL.SENDER]: [EMAIL.FROM], have a message for you:\n\n [EMAIL.BODY] \n\n Regards!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
+(0, '[EMAIL.SENDER] wants to contact you!', 'contact-admin', 'Hello Admin,\n\n [EMAIL.SENDER]: [EMAIL.FROM], have a message for you:\n\n [EMAIL.SUBJECT]\n\n [EMAIL.BODY] \n\n Regards!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'New reply: [TITLE]', 'new-reply', '[URL.QL]\n\n[DESCRIPTION]', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'Purchase Receipt for [PRODUCT.TITLE]', 'new-sale', '==== Order Details ====\nDate: [DATE]\nOrder ID: [ORDER.ID]\nName: [USER.NAME]\nEmail: [USER.EMAIL]\n\n==== Your Order ====\nProduct: [PRODUCT.TITLE]\nProduct Price: [PRODUCT.PRICE]\n\n[PRODUCT.NOTES][DOWNLOAD][EXPIRE][LICENSE]', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'Product updated [TITLE]', 'product-update', '==== Update Details ====\nVersion: [VERSION]\nProduct name: [TITLE][DOWNLOAD][EXPIRE]\n\n==== Product Page ====\n[URL.PRODUCT]', '".core::request('ADMIN_EMAIL')."', 'email', 1),
@@ -359,7 +364,8 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."content` (`ord
 (0, 'New support ticket created `[TITLE]`', 'new-ticket', 'We have received your support inquiry. We will try to answer you within the next 24 working hours, thank you for your patience.\n\n[URL.QL]', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'Congratulations! New affiliate commission [AMOUNT]', 'affiliate-commission', 'Congratulations!,\n\n We just registered a sale from your affiliate link for the amount of [AMOUNT], check them all at your affiliate panel [URL.AFF]. \n\n Thanks for using our affiliate program!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
 (0, 'Password Changed [SITE.NAME]', 'password-changed', 'Hello [USER.NAME],\n\nYour password has been changed.\n\nThese are now your user details:\nEmail: [USER.EMAIL]\nPassword: [USER.PWD]\n\nWe do not have your original password anymore.\n\nRegards!', '".core::request('ADMIN_EMAIL')."', 'email', 1),
-(0, 'Receipt for [ORDER.DESC] #[ORDER.ID]', 'new-order', 'Hello [USER.NAME],Thanks for buying [ORDER.DESC].\n\nPlease complete the payment here [URL.CHECKOUT]', '".core::request('ADMIN_EMAIL')."', 'email', 1);");
+(0, 'Receipt for [ORDER.DESC] #[ORDER.ID]', 'new-order', 'Hello [USER.NAME],Thanks for buying [ORDER.DESC].\n\nPlease complete the payment here [URL.CHECKOUT]', '".core::request('ADMIN_EMAIL')."', 'email', 1),
+(0, 'There is a new reply on the forum', 'new-forum-answer', 'There is a new reply on a forum post where you participated.<br><br><a target=\"_blank\" href=\"[FORUM.LINK]\">Check it here</a><br><br>[FORUM.LINK]<br>', '".core::request('ADMIN_EMAIL')."', 'email',  1);");
 
 
 /**
@@ -402,6 +408,8 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."config` (`grou
 ('payment', 'stripe_private', ''),
 ('payment', 'stripe_public', ''),
 ('payment', 'stripe_address', '0'),
+('payment', 'stripe_alipay', '0'),
+('payment', 'stripe_3d_secure', '0'),
 ('payment', 'alternative', ''),
 ('payment', 'bitpay_apikey', ''),
 ('payment', 'authorize_sandbox', '0'),
@@ -411,11 +419,17 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."config` (`grou
 ('payment', 'twocheckout_secretword', ''),
 ('payment', 'twocheckout_sandbox', 0),
 ('payment', 'fraudlabspro', ''),
+('payment', 'paysbuy', ''),
+('payment', 'paysbuy_sandbox', '0'),
+('payment', 'mercadopago_client_id', ''),
+('payment', 'mercadopago_client_secret', ''),
 ('general', 'api_key', '".core::generate_password(32)."'),
 ('general', 'number_format', '%n'),
 ('general', 'date_format', 'd-m-y'),
 ('general', 'base_url', '".core::request('SITE_URL')."'),
 ('general', 'maintenance', 0),
+('general', 'private_site', 0),
+('general', 'private_site_page', ''),
 ('general', 'analytics', ''),
 ('general', 'translate', ''),
 ('general', 'menu', ''),
@@ -444,6 +458,12 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."config` (`grou
 ('general', 'company_name', ''),
 ('general', 'vat_excluded_countries', ''),
 ('general', 'cookie_consent', 0),
+('general', 'captcha', ''),
+('general', 'recaptcha_active', ''),
+('general', 'recaptcha_secretkey', ''),
+('general', 'recaptcha_sitekey', ''),
+('general', 'cron', 1),
+('general', 'google_authenticator', 0),
 ('image', 'allowed_formats', 'jpeg,jpg,png,'),
 ('image', 'max_image_size', '5'),
 ('image', 'height', ''),
@@ -474,12 +494,13 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."config` (`grou
 ('product', 'qr_code', 0),
 ('product', 'count_visits', 1),
 ('email', 'notify_email', '".core::request('ADMIN_EMAIL')."'),
+('email', 'notify_name', '"."no-reply ".core::request('SITE_NAME')."'),
 ('email', 'new_sale_notify', 0),
 ('email', 'smtp_active', 0),
 ('email', 'smtp_host', ''),
 ('email', 'smtp_port', ''),
 ('email', 'smtp_auth', 0),
-('email', 'smtp_ssl', 0),
+('email', 'smtp_secure', ''),
 ('email', 'smtp_user', ''),
 ('email', 'smtp_pass', ''),
 ('email', 'elastic_active', 0),
@@ -490,7 +511,7 @@ mysqli_query($link,"INSERT INTO `".core::request('TABLE_PREFIX')."config` (`grou
 ('affiliate', 'payment_days', '30'),
 ('affiliate', 'payment_min', '50'),
 ('affiliate', 'tos', ''),
-('social', 'config', '{\"debug_mode\":\"0\",\"providers\":{\"OpenID\":{\"enabled\":\"0\"},\"Yahoo\":{\"enabled\":\"0\",\"keys\":{\"id\":\"\",\"secret\":\"\"}},
+('social', 'config', '{\"debug_mode\":\"0\",\"providers\":{\"OpenID\":{\"enabled\":\"0\"},\"Yahoo\":{\"enabled\":\"0\",\"keys\":{\"key\":\"\",\"secret\":\"\"}},
 \"AOL\":{\"enabled\":\"0\"},\"Google\":{\"enabled\":\"0\",\"keys\":{\"id\":\"\",\"secret\":\"\"}},\"Facebook\":{\"enabled\":\"0\",\"keys\":{\"id\":\"\",\"secret\":\"\"}},
 \"Twitter\":{\"enabled\":\"0\",\"keys\":{\"key\":\"\",\"secret\":\"\"}},\"Live\":{\"enabled\":\"0\",\"keys\":{\"id\":\"\",\"secret\":\"\"}},\"MySpace\":{\"enabled\":\"0\",\"keys\":{\"key\":\"\",\"secret\":\"\"}},
 \"LinkedIn\":{\"enabled\":\"0\",\"keys\":{\"key\":\"\",\"secret\":\"\"}},\"Foursquare\":{\"enabled\":\"0\",\"keys\":{\"id\":\"\",\"secret\":\"\"}}},\"base_url\":\"\",\"debug_file\":\"\"}');");

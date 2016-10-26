@@ -112,11 +112,11 @@ class Auth_Controller extends Controller
                 //other color
                 if (Theme::get('admin_theme')=='bootstrap')
                 {
-                    Theme::$styles                    = array('//netdna.bootstrapcdn.com/bootswatch/3.3.2/paper/bootstrap.min.css' => 'screen',
-                                                            '//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css?v=print' => 'print',
+                    Theme::$styles                    = array('//cdn.jsdelivr.net/bootswatch/3.3.6/paper/bootstrap.min.css' => 'screen',
+                                                            '//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css?v=print' => 'print',
                                                             '//cdn.jsdelivr.net/chosen/1.0.0/chosen.css'=>'screen',
                                                             '//cdn.jsdelivr.net/bootstrap.tagsinput/0.3.9/bootstrap-tagsinput.css'=>'screen',
-                                                            '//cdn.jsdelivr.net/sweetalert/0.1.2/sweet-alert.min.css'=>'screen',
+                                                            '//cdn.jsdelivr.net/sweetalert/1.1.3/sweetalert.css'=>'screen',
                                                             'css/jquery.sceditor.default.theme.min.css' => 'screen',
                                                             'css/loadingbar.css'=>'screen', 
                                                             'css/icon-picker.min.css'=>'screen', 
@@ -128,12 +128,12 @@ class Auth_Controller extends Controller
                 //default theme
                 else
                 {
-                     Theme::$styles               = array(  '//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' => 'screen',   
-                                                    '//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css?v=print' => 'print',                             
-                                                    '//netdna.bootstrapcdn.com/bootswatch/3.3.2/'.Theme::get('admin_theme','cerulean').'/bootstrap.min.css' => 'screen',
+                     Theme::$styles               = array(  '//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css' => 'screen',   
+                                                    '//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css?v=print' => 'print',                             
+                                                    '//cdn.jsdelivr.net/bootswatch/3.3.6/'.Theme::get('admin_theme','cerulean').'/bootstrap.min.css' => 'screen',
                                                     '//cdn.jsdelivr.net/chosen/1.0.0/chosen.css' => 'screen', 
                                                     '//cdn.jsdelivr.net/bootstrap.tagsinput/0.3.9/bootstrap-tagsinput.css'=>'screen',
-                                                    '//cdn.jsdelivr.net/sweetalert/0.1.2/sweet-alert.min.css'=>'screen',
+                                                    '//cdn.jsdelivr.net/sweetalert/1.1.3/sweetalert.css'=>'screen',
                                                     'css/jquery.sceditor.default.theme.min.css' => 'screen',
                                                     'css/loadingbar.css'=>'screen', 
                                                     'css/icon-picker.min.css'=>'screen', 
@@ -145,22 +145,23 @@ class Auth_Controller extends Controller
             
 
 
-                Theme::$scripts['footer']		  = array('//code.jquery.com/jquery-1.10.2.min.js',	
-                                                          '//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js', 
+                Theme::$scripts['footer']		  = array('//cdn.jsdelivr.net/jquery/1.12.3/jquery.min.js',	
+                                                          '//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js', 
                                                           '//cdn.jsdelivr.net/chosen/1.0.0/chosen.jquery.min.js',
                                                           Route::url('jslocalization', array('controller'=>'jslocalization', 'action'=>'chosen')),
-                                                          'http://'.((Kohana::$environment!== Kohana::DEVELOPMENT)? 'market.'.Core::DOMAIN.'':'eshop.lo').'/embed.js',
+                                                          ((Kohana::$environment!== Kohana::DEVELOPMENT)? 'market.'.Core::DOMAIN.'':'eshop.lo').'/embed.js',
                                                           'js/oc-panel/theme.init.js?v='.Core::VERSION,
                                                           'js/jquery.sceditor.bbcode.min.js',
                                                           'js/summernote.min.js',
-                                                          'js/summernote-ext-video.js',
                                                           'js/jquery.validate.min.js',
                                                           Route::url('jslocalization', array('controller'=>'jslocalization', 'action'=>'validate')),
                                                          'js/jquery.cookie.min.js',
                                                           'js/iconPicker.min.js',
                                                           'js/oc-panel/sidebar.js?v='.Core::VERSION,
                                                           '//cdn.jsdelivr.net/bootstrap.tagsinput/0.3.9/bootstrap-tagsinput.min.js',
-                                                          '//cdn.jsdelivr.net/sweetalert/0.1.2/sweet-alert.min.js',
+                                                          '//cdn.jsdelivr.net/sweetalert/1.1.3/sweetalert.min.js',
+                                                          'js/jquery.bootgrid.min.js',
+                                                          'js/query.bootgrid.fa.min.js',
                                                           'js/form.js?v='.Core::VERSION,
                                                           );
             }

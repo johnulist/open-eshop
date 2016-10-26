@@ -1,5 +1,65 @@
 <?php defined('SYSPATH') or die('No direct script access.');
                 return array (
+     '2.5.0' => 
+  array (
+    'codename' => 'Köln',
+    'released' => '2016-10-07',
+    'blog' => 'http://open-eshop.com/2016/10/07/open-eshop-2-5-0/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.4.0...2.5.0',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.5.0+is%3Aclosed',
+    'download' => 'https://j.mp/oe_250',
+  ),  
+
+ '2.4.0' => 
+  array (
+    'codename' => 'Munich',
+    'released' => '2016-06-07',
+    'blog' => 'http://open-eshop.com/2016/06/07/open-eshop-2-4-0/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.3.0...2.4.0',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.4.0+is%3Aclosed',
+    'download' => 'http://j.mp/oe_240',
+  ),
+
+    '2.3.0' => 
+  array (
+    'codename' => 'Berlin',
+    'released' => '2016-02-04',
+    'blog' => 'http://open-eshop.com/2016/02/04/open-eshop-2-3-0/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.2.0...2.3.0',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.3.0+is%3Aclosed',
+    'download' => 'http://j.mp/oe_230',
+  ),
+
+  '2.2.0' => 
+  array (
+    'codename' => 'Gant',
+    'released' => '2015-12-21',
+    'blog' => 'http://open-eshop.com/2015/12/21/open-eshop-2-2-0/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.1.0...2.2.0',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.2.0+is%3Aclosed',
+    'download' => 'http://j.mp/oe_220',
+  ),
+
+  '2.1.0' => 
+  array (
+    'codename' => 'Brusels',
+    'released' => '2015-11-30',
+    'blog' => 'http://open-eshop.com/2015/11/30/open-eshop-2-1-0/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.0.1...2.1.0',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.1.0+is%3Aclosed',
+    'download' => 'http://j.mp/oe_210',
+  ),
+                    
+  '2.0.1' => 
+  array (
+    'codename' => 'Las Galeras 1',
+    'released' => '2015-08-03',
+    'blog' => 'http://open-eshop.com/2015/08/03/open-eshop-2-0-1/',
+    'changelog' => 'https://github.com/open-classifieds/open-eshop/compare/2.0.0...2.0.1',
+    'issues' => 'https://github.com/open-classifieds/open-eshop/issues?q=milestone%3A2.0.1+is%3Aclosed',
+    'download' => 'http://j.mp/oe_201',
+  ),
+
     '2.0.0' => 
   array (
     'codename' => 'Las Galeras',

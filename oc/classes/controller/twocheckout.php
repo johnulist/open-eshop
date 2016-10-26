@@ -19,7 +19,8 @@ class Controller_twocheckout extends Controller{
     { 
         $this->auto_render = FALSE;
 
-        $id_order = $this->request->param('id');
+        //sandobx doesnt do the x_receipt_link_url redirect so in sanbbox instead we put the order id
+        $id_order = (Core::config('payment.twocheckout_sandbox') == 1)? Core::request('x_receipt_link_url') : $this->request->param('id') ;
 
         //retrieve info for the item in DB
         $order = new Model_Order();
@@ -29,10 +30,17 @@ class Controller_twocheckout extends Controller{
 
         if ($order->loaded())
         {
+            //its a fraud...lets let him know
+            if ( $order->is_fraud() === TRUE )
+            {
+                Alert::set(Alert::ERROR, __('We had, issues with your transaction. Please try paying with another paymethod.'));
+                $this->redirect(Route::url('default', array('controller'=>'product','action'=>'checkout','id'=>$order->id_order)));
+            }
+
             if ( ($order_id = twocheckout::validate_passback($order))!==FALSE ) 
             {
                 //mark as paid
-                $order->confirm_payment('2checkout',$order_id);
+                $order->confirm_payment('2checkout',$order_id, NULL, NULL, NULL,Twocheckout::calculate_fee($order->amount) );
                 
                 //redirect him to his ads
                 Alert::set(Alert::SUCCESS, __('Thanks for your payment!'));

@@ -10,6 +10,229 @@
  */
 class Controller_Panel_Update extends Controller_Panel_OC_Update {    
 
+    /**
+     * This function will upgrade DB that didn't existed in versions prior to 2.6.0
+     */
+    public function action_260()
+    {
+
+        //new configs
+        $configs = array(
+                        
+                        array( 'config_key'     => 'stripe_3d_secure',
+                               'group_name'     => 'payment', 
+                               'config_value'   => '0'),
+                        );
+        
+        
+        Model_Config::config_array($configs);
+    }
+
+    /**
+     * This function will upgrade DB that didn't existed in versions prior to 2.5.0
+     */
+    public function action_250()
+    {
+        //fixes yahoo login
+        try 
+        {
+            DB::query(Database::UPDATE,"UPDATE `".self::$db_prefix."config` SET `config_value`= REPLACE(`config_value`,',\"Yahoo\":{\"enabled\":\"0\",\"keys\":{\"id\":',',\"Yahoo\":{\"enabled\":\"0\",\"keys\":{\"key\":') WHERE `group_name` = 'social' AND `config_key`='config' AND `config_value` LIKE '%,\"Yahoo\":{\"enabled\":\"0\",\"keys\":{\"id\":%'")->execute();
+            DB::query(Database::UPDATE,"UPDATE ".self::$db_prefix."content SET description='Hello Admin,\n\n [EMAIL.SENDER]: [EMAIL.FROM], have a message for you:\n\n [EMAIL.SUBJECT]\n\n [EMAIL.BODY] \n\n Regards!' WHERE seotitle='contact-admin'")->execute();
+        }catch (exception $e) {}
+
+        //new configs
+        $configs = array(
+                        array( 'config_key'     => 'notify_name',
+                               'group_name'     => 'email', 
+                               'config_value'   => 'no-reply '.core::config('general.site_name')),
+                        array( 'config_key'     => 'mercadopago_client_id',
+                               'group_name'     => 'payment', 
+                               'config_value'   => ''),
+                        array( 'config_key'     => 'mercadopago_client_secret',
+                               'group_name'     => 'payment', 
+                               'config_value'   => ''),
+                        );
+
+        Model_Config::config_array($configs);
+    }
+
+     /**
+     * This function will upgrade DB that didn't existed in versions prior to 2.4.0
+     */
+    public function action_240()
+    {
+     //google 2 step auth
+        try 
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE  `".self::$db_prefix."users` ADD `google_authenticator` varchar(40) DEFAULT NULL")->execute();
+        }catch (exception $e) {}
+
+
+        //new configs
+        $configs = array(
+                        array( 'config_key'     => 'google_authenticator',
+                               'group_name'     => 'general', 
+                               'config_value'   => '0'),
+                        array( 'config_key'     => 'private_site',
+                               'group_name'     => 'general', 
+                               'config_value'   => '0'),
+                        array( 'config_key'     => 'private_site_page   ',
+                               'group_name'     => 'general', 
+                               'config_value'   => ''),
+                        );
+        
+        Model_Config::config_array($configs);
+    }
+
+    /**
+     * This function will upgrade DB that didn't existed in versions prior to 2.2.0
+     */
+    public function action_230()
+    {
+        //configs for SMTP
+        try
+        {
+            DB::query(Database::UPDATE,"INSERT INTO `".self::$db_prefix."config` (`group_name`, `config_key`, `config_value`) VALUES ('email', 'smtp_secure', (SELECT IF(config_value=0,'','ssl') as config_value FROM `".self::$db_prefix."config`as oconf WHERE `config_key` = 'smtp_ssl' AND `group_name`='email' LIMIT 1) );")->execute();
+        }catch (exception $e) {}
+
+        try
+        {
+            DB::query(Database::UPDATE,"DELETE FROM `".self::$db_prefix."config` WHERE `config_key` = 'smtp_ssl' AND `group_name`='email' LIMIT 1;")->execute();
+        }catch (exception $e) {}
+
+        //add new device_id for license
+        try 
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE  `".self::$db_prefix."licenses` ADD `device_id` varchar(255) DEFAULT NULL ;")->execute();
+        }catch (exception $e) {}
+
+        //new mails
+        $contents = array(array('order'=>0,
+                                'title'=>'There is a new reply on the forum',
+                               'seotitle'=>'new-forum-answer',
+                               'description'=>"There is a new reply on a forum post where you participated.<br><br><a target=\"_blank\" href=\"[FORUM.LINK]\">Check it here</a><br><br>[FORUM.LINK]<br>",
+                               'from_email'=>core::config('email.notify_email'),
+                               'type'=>'email',
+                               'status'=>'1'),
+                        );
+
+        Model_Content::content_array($contents);
+    }
+
+    public function action_220()
+    {
+        //remove innodb
+        try
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE `".self::$db_prefix."categories` ENGINE = MyISAM")->execute();
+        }catch (exception $e) {}
+        try
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE `".self::$db_prefix."users` ENGINE = MyISAM")->execute();
+        }catch (exception $e) {}
+
+        //new configs
+        $configs = array(
+                        array( 'config_key'     => 'paysbuy',
+                               'group_name'     => 'payment',
+                               'config_value'   => ''),
+                        array( 'config_key'     => 'paysbuy_sandbox',
+                               'group_name'     => 'payment',
+                               'config_value'   => '0'),
+                        array( 'config_key'     => 'cron',
+                               'group_name'     => 'general',
+                               'config_value'   => '0'),
+                        );
+        
+        Model_Config::config_array($configs);  
+    }
+
+    public function action_210()
+    {
+        
+        //add new order fields
+        try 
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE  `".self::$db_prefix."orders` ADD `amount_net`  DECIMAL(14,3) NOT NULL DEFAULT '0' AFTER `amount`;")->execute();
+            DB::query(Database::UPDATE,"ALTER TABLE  `".self::$db_prefix."orders` ADD `gateway_fee` DECIMAL(14,3) NOT NULL DEFAULT '0' AFTER `amount_net`;")->execute();
+            DB::query(Database::UPDATE,"ALTER TABLE  `".self::$db_prefix."orders` ADD `VAT_amount`  DECIMAL(14,3) NOT NULL DEFAULT '0' AFTER `VAT`;")->execute();
+        }catch (exception $e) {}
+
+        //make posts bigger description
+        try
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE `".self::$db_prefix."posts` CHANGE `description` `description` LONGTEXT;")->execute();
+        }catch (exception $e) {}
+
+        try
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE `".self::$db_prefix."content` CHANGE `description` `description` LONGTEXT;")->execute();
+        }catch (exception $e) {}
+
+        //bigger configs
+        try
+        {
+            DB::query(Database::UPDATE,"ALTER TABLE `".self::$db_prefix."config` CHANGE `config_value` `config_value` LONGTEXT;")->execute();
+        }catch (exception $e) {}
+
+        //recalculate all the orders
+        $orders = new Model_Order();
+        $orders = $orders->where('status','=', Model_Order::STATUS_PAID)->where('amount_net','=',0)->find_all();
+
+        foreach ($orders as $order) 
+        {
+            if ($order->paymethod=='stripe')
+                $order->gateway_fee = StripeKO::calculate_fee($order->amount);
+            elseif ($order->paymethod=='2checkout')
+                $order->gateway_fee = Twocheckout::calculate_fee($order->amount);
+            elseif ($order->paymethod=='paymill')
+                $order->gateway_fee = Paymill::calculate_fee($order->amount);
+            elseif ($order->paymethod=='authorize')
+                $order->gateway_fee = Controller_Authorize::calculate_fee($order->amount);
+            elseif ($order->paymethod=='paypal')//we dont have the history of the transactions so we clculate an aproximation using 4%
+                $order->gateway_fee =  (4 * $order->amount / 100);
+            else
+                $order->gateway_fee = 0;
+           
+            //get VAT paid
+            if ($order->VAT > 0)
+                $order->VAT_amount = $order->amount - (100*$order->amount)/(100+$order->VAT);
+            else
+                $order->VAT_amount = 0;
+
+            //calculate net amount
+            $order->amount_net = $order->amount - $order->gateway_fee - $order->VAT_amount;
+
+            try {
+                $order->save();
+            } catch (Exception $e) {
+                throw HTTP_Exception::factory(500,$e->getMessage());  
+            }
+
+        }
+
+        //new configs
+        $configs = array(
+                        array( 'config_key'     => 'stripe_alipay',
+                               'group_name'     => 'payment', 
+                               'config_value'   => '0'),
+                        array( 'config_key'     => 'captcha',
+                               'group_name'     => 'general',
+                               'config_value'   => ''),
+                        array( 'config_key'     => 'recaptcha_active',
+                               'group_name'     => 'general',
+                               'config_value'   => ''),
+                        array( 'config_key'     => 'recaptcha_secretkey',
+                               'group_name'     => 'general',
+                               'config_value'   => ''),
+                        array( 'config_key'     => 'recaptcha_sitekey',
+                               'group_name'     => 'general',
+                               'config_value'   => ''),
+                        );
+        
+        Model_Config::config_array($configs);        
+    }
+
     public function action_200()
     {
         //new configs

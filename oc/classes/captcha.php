@@ -18,11 +18,26 @@ class Captcha extends OC_Captcha{
      * @param string $name for the session
      * @return boolean
      */
-    public static function check($name = '')
+    public static function check($name = '', $ajax = FALSE)
     { 
+        //for OE
+        if (core::config('general.captcha') != NULL AND core::config('general.captcha') == FALSE) // Captchas disabled on OE
+            return TRUE;
+        
+        // verify with recaptcha if enabled
+        if (Core::config('general.recaptcha_active'))
+        {
+            if (self::recaptcha_verify())
+                return TRUE;
+            else
+                return FALSE;   
+        }
+        
         if (Session::instance()->get('captcha_'.$name) == strtolower(core::post('captcha'))) 
         {
-            Session::instance()->set('captcha_'.$name, '');
+            if ($ajax === FALSE)
+                Session::instance()->set('captcha_'.$name, '');
+                
             return TRUE;
         }
         else return FALSE;

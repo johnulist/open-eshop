@@ -3,7 +3,7 @@
 <?=Form::errors()?>
 <div class="page-header">
     <h1><?=__('Payments Configuration')?></h1>
-    <p class=""><?=__('List of payment configuration values. Replace input fields with new desired values.')?></p>
+    <p class=""><?=__('List of payment configuration values. Replace input fields with new desired values.')?> <a  target="_blank" href="https://docs.open-eshop.com/setup-payment-gateways/" target="_blank"><?=__('Read more')?></a></p>
     <?if (Theme::get('premium')!=1):?>
         <p class="well"><span class="label label-info"><?=__('Heads Up!')?></span> 
             <?=sprintf(__('%s are only available with premium themes!'),sprintf('Authorize, Stripe, Paymill %s Bitpay',__('and'))).'<br/>'.__('Upgrade your Open eShop site to activate this feature.')?>
@@ -179,9 +179,9 @@
                             <label class="col-md-8 col-md-offset-4">
                                 <p><?=sprintf(__('To get paid via Credit card you need a %s account'),'Authorize.net')?>. <?=__('You will need also a SSL certificate')?>, <a href="https://www.ssl.com/code/49" target="_blank"><?=__('buy your SSL certificate here')?></a>.</p>
                                 <?=__('Register')?>
-                                <a class="btn btn-success" target="_blank" href="http://reseller.authorize.net/application/signupnow/?id=AUAffiliate&rid=26776">
+                                <a class="btn btn-success" target="_blank" href="http://reseller.authorize.net/application/signupnow/?id=AUAffiliate">
                                     </i> US/Canada</a>
-                                <a class="btn btn-success" target="_blank" href="http://reseller.authorize.net/application/?id=5561123">
+                                <a class="btn btn-success" target="_blank" href="http://reseller.authorize.net/application/">
                                     UK/Europe</a>
                             </label>
                         </div>
@@ -351,6 +351,45 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                        <?= FORM::label($forms['stripe_alipay']['key'], __('Accept Alipay payments'), array('class'=>'col-md-4 control-label', 'for'=>$forms['stripe_alipay']['key']))?>
+                        <div class="col-md-8">
+                            <div class="onoffswitch">
+                                <?= Form::checkbox($forms['stripe_alipay']['key'], 1, (bool) $forms['stripe_alipay']['value'], array(
+                                'placeholder' => __("TRUE or FALSE"), 
+                                'class' => 'onoffswitch-checkbox', 
+                                'id' => $forms['stripe_alipay']['key'], 
+                                'data-content'=> '',
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>'',                     
+                                ))?>
+                                <?= FORM::label($forms['stripe_alipay']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['stripe_alipay']['key']))?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                            <?= FORM::label($forms['stripe_3d_secure']['key'], __('Requires 3D security').' - BETA', array('class'=>'col-md-4 control-label', 'for'=>$forms['stripe_3d_secure']['key']))?>
+                            <div class="col-md-8">
+                                <div class="onoffswitch">
+                                    <?= FORM::hidden($forms['stripe_3d_secure']['key'], 0);?>
+                                    <?= FORM::checkbox($forms['stripe_3d_secure']['key'], 1, (bool) $forms['stripe_3d_secure']['value'], array(
+                                    'placeholder' => "TRUE or FALSE", 
+                                    'class' => 'onoffswitch-checkbox', 
+                                    'id' => $forms['stripe_3d_secure']['key'], 
+                                    'data-content'=> '',
+                                    'data-trigger'=>"hover",
+                                    'data-placement'=>"right",
+                                    'data-toggle'=>"popover",
+                                    'data-original-title'=>'',                     
+                                    ))?>
+                                    <?= FORM::label($forms['stripe_3d_secure']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['stripe_3d_secure']['key']))?>
+                                </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
@@ -388,13 +427,120 @@
             </div>
 
             <div class="panel panel-default">
+                <div class="panel-heading">Paysbuy</div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        
+                        <div class="form-group">
+                            <label class="col-md-8 col-md-offset-4">
+                                <p>Accept BAHT using Paysbuy</p>
+                                <a class="btn btn-success" target="_blank" href="https://paysbuy.com">
+                                    <i class="glyphicon glyphicon-pencil"></i> Register for free at Paysbuy</a>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <?= FORM::label($forms['paysbuy']['key'], __('Paysbuy account'), array('class'=>'col-md-4 control-label', 'for'=>$forms['paysbuy']['key']))?>
+                            <div class="col-md-8">
+                                <?= FORM::input($forms['paysbuy']['key'], $forms['paysbuy']['value'], array(
+                                'placeholder' => "", 
+                                'class' => 'tips form-control', 
+                                'id' => $forms['paysbuy']['key'],
+                                'data-content'=> __("Paysbuy account email"),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>'', 
+                                ))?> 
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?= FORM::label($forms['paysbuy_sandbox']['key'], __('Sandbox'), array('class'=>'col-md-4 control-label', 'for'=>$forms['paysbuy_sandbox']['key']))?>
+                            <div class="col-md-8">
+                                <div class="onoffswitch">
+                                    <?= Form::checkbox($forms['paysbuy_sandbox']['key'], 1, (bool) $forms['paysbuy_sandbox']['value'], array(
+                                    'placeholder' => __("TRUE or FALSE"), 
+                                    'class' => 'onoffswitch-checkbox', 
+                                    'id' => $forms['paysbuy_sandbox']['key'], 
+                                    'data-content'=> '',
+                                    'data-trigger'=>"hover",
+                                    'data-placement'=>"right",
+                                    'data-toggle'=>"popover",
+                                    'data-original-title'=>'',                     
+                                    ))?>
+                                    <?= FORM::label($forms['paysbuy_sandbox']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['paysbuy_sandbox']['key']))?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">MercadoPago</div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-md-8 col-md-offset-4">
+                                <p>
+                                Get your <strong>CLIENT_ID</strong> and <strong>CLIENT_SECRET</strong> in the following address:
+                                <ul>
+                                <li>Argentina: <a href="https://www.mercadopago.com/mla/herramientas/aplicaciones">https://www.mercadopago.com/mla/herramientas/aplicaciones</a></li>
+                                <li>Brazil: <a href="https://www.mercadopago.com/mlb/ferramentas/aplicacoes">https://www.mercadopago.com/mlb/ferramentas/aplicacoes</a></li>
+                                <li>Mexico: <a href="https://www.mercadopago.com/mlm/herramientas/aplicaciones">https://www.mercadopago.com/mlm/herramientas/aplicaciones</a></li>
+                                <li>Venezuela: <a href="https://www.mercadopago.com/mlv/herramientas/aplicaciones">https://www.mercadopago.com/mlv/herramientas/aplicaciones</a></li>
+                                <li>Colombia: <a href="https://www.mercadopago.com/mco/herramientas/aplicaciones">https://www.mercadopago.com/mco/herramientas/aplicaciones</a></li>
+                                <li>Chile: <a href="https://www.mercadopago.com/mlc/herramientas/aplicaciones">https://www.mercadopago.com/mlc/herramientas/aplicaciones</a></li>
+                                </ul>
+                                </p>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <?= FORM::label($forms['mercadopago_client_id']['key'], __('Client ID'), array('class'=>'col-md-4 control-label', 'for'=>$forms['mercadopago_client_id']['key']))?>
+                            <div class="col-md-8">
+                                <?= FORM::input($forms['mercadopago_client_id']['key'], $forms['mercadopago_client_id']['value'], array(
+                                'placeholder' => "", 
+                                'class' => 'tips form-control', 
+                                'id' => $forms['mercadopago_client_id']['key'],
+                                'data-content'=> __("Client ID"),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>'', 
+                                ))?> 
+                            </div>
+                        </div>
+        
+                        <div class="form-group">
+                            <?= FORM::label($forms['mercadopago_client_secret']['key'], __('Client Secret'), array('class'=>'col-md-4 control-label', 'for'=>$forms['mercadopago_client_secret']['key']))?>
+                            <div class="col-md-8">
+                                <?= FORM::input($forms['mercadopago_client_secret']['key'], $forms['mercadopago_client_secret']['value'], array(
+                                'placeholder' => "", 
+                                'class' => 'tips form-control', 
+                                'id' => $forms['mercadopago_client_secret']['key'],
+                                'data-content'=> __("Client Secret"),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>'', 
+                                ))?> 
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
                 <div class="panel-heading">Prevent Fraud</div>
                 <div class="panel-body">
                     <div class="form-horizontal">
 
                         <div class="form-group">
                             <label class="col-md-8 col-md-offset-4">
-                                <p><?=__('Help prevent card fraud with FraudLabsPro, for Stripe, Pymill and Authorize.')?></p>
+                                <p><?=__('Help prevent card fraud with FraudLabsPro, for Stripe, 2co, Paymill and Authorize.')?></p>
                                 <a class="btn btn-success" target="_blank" href="http://www.fraudlabspro.com/?ref=1429">
                                     <i class="glyphicon glyphicon-pencil"></i> <?=sprintf(__('Register for free at %s'),'FraudLabsPro')?></a>
                             </label>

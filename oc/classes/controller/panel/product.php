@@ -1,16 +1,23 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Panel_Product extends Auth_Crud {
+class Controller_Panel_Product extends Auth_CrudAjax {
 
-	/**
-	 * @var $_index_fields ORM fields shown in index
-	 */
-	protected $_index_fields = array('title','status');
+    /**
+     * @var $_index_fields ORM fields shown in index
+     */
+    protected $_index_fields = array('title','status','price');
 
-	/**
-	 * @var $_orm_model ORM model name
-	 */
-	protected $_orm_model = 'product';
+
+    protected $_search_fields = array('title','description');
+
+    /**
+     * @var $_orm_model ORM model name
+     */
+    protected $_orm_model = 'product';
+
+    protected $_filter_fields = array(   
+                                        'status' => array(0=>'Inactive',1=>'Active'),
+                                        );
 
     /**
      *
@@ -19,15 +26,6 @@ class Controller_Panel_Product extends Auth_Crud {
      */
     public $crud_actions = array('create','update');
 
-    /**
-     *
-     * Loads a basic list info
-     * @param string $view template to render 
-     */
-    public function action_index($view = NULL)
-    {
-        parent::action_index('oc-panel/pages/products/index');
-    }    
 
 	/**
      * overwrites the default crud index
@@ -61,7 +59,7 @@ class Controller_Panel_Product extends Auth_Crud {
         if(count($cats) <= 1)
         {
             Alert::set(Alert::WARNING, __('Please create a category first!'));
-            $this->redirect(Route::url('oc-panel', array('controller'=>'product','action'=>'index')));
+            $this->redirect(Route::url('oc-panel', array('controller'=>'category','action'=>'create')).'?rel=ajax');
         }
 
         $obj_product = new Model_Product();

@@ -4,6 +4,7 @@ function init_panel()
     {
         $("#formorm_description, textarea[name=description], textarea[name=email_purchase_notes], .cf_textarea_fields").summernote({
             height: "450",
+            placeholder: ' ',
             toolbar: [
                         ['style', ['style']],
                         ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -16,12 +17,26 @@ function init_panel()
                         ['insert', ['link', 'picture', 'video', 'hr']],
                         ['view', ['fullscreen', 'codeview']],
                         ['help', ['help']],
-            ]
+            ],
+            callbacks: {
+                onInit: function() {
+                    $(".note-placeholder").text($(this).attr('placeholder'));
+                },
+                onPaste: function (e) {
+                    var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                    e.preventDefault();
+                        document.execCommand('insertText', false, text);
+                },
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0], editor, welEditable);
+                }
+            }
         });
     }
 	else if ($( "#crud-post" ).length || $( "#crud-category" ).length) {
 		$("#formorm_description").summernote({
             height: "350",
+            placeholder: ' ',
             toolbar: [
                         ['style', ['style']],
                         ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -34,17 +49,29 @@ function init_panel()
                         ['insert', ['link', 'picture', 'video', 'hr']],
                         ['view', ['fullscreen', 'codeview']],
                         ['help', ['help']],
-            ]
+            ],
+            callbacks: {
+                onInit: function() {
+                    $(".note-placeholder").text($(this).attr('placeholder'));
+                },
+                onPaste: function (e) {
+                    var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                    e.preventDefault();
+                        document.execCommand('insertText', false, text);
+                },
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0], editor, welEditable);
+                }
+            }
         });
 	}
     else
-    {
-        $('#formorm_description, textarea[name=description], textarea[name=email_purchase_notes], .cf_textarea_fields').addClass('col-md-6').sceditorBBCodePlugin({
+    {   
+        $('#formorm_description, textarea[name=description]:not(.disable-bbcode), textarea[name=email_purchase_notes], .cf_textarea_fields').addClass('col-md-6').sceditorBBCodePlugin({
             toolbar: "bold,italic,underline,strike|left,center,right,justify|" +
             "bulletlist,orderedlist|link,unlink,image,youtube|source",
             resizeEnabled: "true",
-            emoticonsEnabled: "false",
-            emoticonsCompat: "false",
+            emoticonsEnabled: false,
             style: $('meta[name="application-name"]').data('baseurl') + "themes/default/css/jquery.sceditor.default.min.css",
             enablePasteFiltering: "true"});
     }
@@ -143,6 +170,17 @@ function init_panel()
             window.open(href,"_self");
         });
     }); 
+
+    //load modal documentation
+    $('a[href*="docs.open-eshop.com"]').click(function( event ) {
+        event.preventDefault();
+        $('#docModal .modal-body').load($(this).attr('href') + ' .post', function() {
+            $('#docModal .modal-body img').each( function() {
+                $(this).addClass('img-responsive');
+            });
+            $('#docModal').modal('show');
+        });
+    });
 }
 
 $(function (){
@@ -228,4 +266,37 @@ function updateURLParameter(url, param, paramVal){
 
     var rows_txt = temp + "" + param + "=" + paramVal;
     return baseURL + "?" + newAdditionalURL + rows_txt;
+}
+
+function sendFile(file, editor, welEditable) {
+    data = new FormData();
+    data.append("image", file);
+    $('body').css({'cursor' : 'wait'});
+    $.ajax({
+        url: $('meta[name="application-name"]').data('baseurl') + 'oc-panel/cmsimages/create',
+        datatype: "json",
+        type: "POST",
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            response = jQuery.parseJSON(response);
+            if (response.link) {
+                if ($("textarea[name=description]").data('editor')=='html') {
+                    $("#formorm_description, textarea[name=description], textarea[name=email_purchase_notes], .cf_textarea_fields").summernote('editor.insertImage', response.link);
+                }
+                else if ($( "#crud-post" ).length || $( "#crud-category" ).length || $( "#crud-location" ).length) {
+                    $("#formorm_description").summernote('editor.insertImage', response.link);
+                }
+            }
+            else {
+                alert(response.msg);
+            }
+            $('body').css({'cursor' : 'default'});
+        },
+        error: function(response) {
+            $('body').css({'cursor' : 'default'});
+        },
+    });
 }

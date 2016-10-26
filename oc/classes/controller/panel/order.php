@@ -1,16 +1,16 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+    <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Panel_Order extends Auth_Crud {
+class Controller_Panel_Order extends Auth_CrudAjax {
 
-	/**
-	* @var $_index_fields ORM fields shown in index
-	*/
-	protected $_index_fields = array('id_order','id_user','id_product', 'paymethod','amount','status');
-	
-	/**
-	 * @var $_orm_model ORM model name
-	 */
-	protected $_orm_model = 'order';
+    /**
+    * @var $_index_fields ORM fields shown in index
+    */
+    protected $_index_fields = array('id_order','id_user','country','id_product', 'paymethod','amount','id_coupon','pay_date','created','status');
+    
+    /**
+     * @var $_orm_model ORM model name
+     */
+    protected $_orm_model = 'order';
 
     /**
      *
@@ -19,12 +19,40 @@ class Controller_Panel_Order extends Auth_Crud {
      */
     public $crud_actions = array('create','update');
 
+
+    
+
+    protected $_fields_caption = array( 'id_user'       => array('model'=>'user','caption'=>'email'),
+                                        'id_product'    => array('model'=>'product','caption'=>'title'),
+                                        'id_coupon'    => array('model'=>'coupon','caption'=>'name')
+                                         );
+
+    function __construct(Request $request, Response $response)
+    {
+        parent::__construct($request, $response);
+        $this->_buttons_actions = array( array( 'url'   => Route::url('oc-panel', array('controller'=>'profile', 'action'=>'order')).'/' ,
+                                                'title' => __('See order'),
+                                                'class' => '',
+                                                'icon'  => 'fa fa-fw fa-search'
+                                                ));
+
+        $this->_filter_fields = array(  'id_user'    => 'INPUT', 
+                                        'id_coupon'    => 'INPUT', 
+                                        'pay_date'   => 'DATE', 
+                                        'created'    => 'DATE', 
+                                        'country'    => array('type'=>'DISTINCT','table'=>'orders','field'=>'country'),
+                                        'paymethod'  => array('type'=>'DISTINCT','table'=>'orders','field'=>'paymethod'),
+                                        'id_product' => array('type'=>'SELECT','table'=>'products','key'=>'id_product','value'=>'title'),
+                                        'status'     => Model_Order::$statuses,
+                                        );
+    }
+
     /**
      *
      * Loads a basic list info
      * @param string $view template to render 
      */
-    public function action_index($view = NULL)
+    public function action_index_old($view = NULL)
     {
         $this->template->title = __('Orders');
 

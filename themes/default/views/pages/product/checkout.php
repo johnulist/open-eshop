@@ -1,16 +1,4 @@
-<?if (core::config('payment.fraudlabspro')!=''): ?>
-<script type="text/javascript">
-document.write(unescape("%3Cscript src='" + ('https:' == document.location.protocol ? 'https://' : 'http://') + "static.fraudlabspro.com/agent.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
- 
-<script type="text/javascript">
-try{
-    var flp = new FraudLabsPro;
-    flp.start({session_id: '<?php echo session_id(); ?>'});
-}
-catch(e){}
-</script>
-<?endif?>
+<?php defined('SYSPATH') or die('No direct script access.');?>
 
 <!-- ******Panel Section****** --> 
 <section class="user-panel user-panel-listing section has-bg-color">
@@ -189,8 +177,14 @@ catch(e){}
                                     <?if(($two = twocheckout::form($order)) != ''):?>
                                         <li class="text-right"><?=$two?></li>
                                     <?endif?>
+                                    <?if(($paysbuy = paysbuy::form($order)) != ''):?>
+                                        <li class="text-right"><?=$paysbuy?></li>
+                                    <?endif?>
                                     <?if( ($alt = $order->alternative_pay_button()) != ''):?>
                                         <li class="text-right"><?=$alt?></li>
+                                    <?endif?>
+                                    <?if(($mp = MercadoPago::button($order)) != ''):?>
+                                        <li class="text-right"><?=$mp?></li>
                                     <?endif?>
                                 </ul>
                             </div>
@@ -204,3 +198,19 @@ catch(e){}
         </div><!--//row-->
     </div><!--//container-->        
 </section><!--//user-panel-->
+
+<?if (core::config('payment.fraudlabspro')!=''): ?>
+<script>
+    (function(){
+        function s() {
+            var e = document.createElement('script');
+            e.type = 'text/javascript';
+            e.async = true;
+            e.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + 'cdn.fraudlabspro.com/s.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(e, s);
+        }             
+        (window.attachEvent) ? window.attachEvent('onload', s) : window.addEventListener('load', s, false);
+    })();
+</script>
+<?endif?>

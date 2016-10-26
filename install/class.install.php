@@ -23,7 +23,7 @@ class install{
      * Software install settings
      * @var string
      */
-    const VERSION   = '2.0.0';
+    const VERSION   = '2.5.0';
 
     /**
      * default locale/language of the install
@@ -74,9 +74,25 @@ class install{
         install::gettext_init(self::$locale);
 
         // Try to guess installation URL
-        self::$url = 'http://'.$_SERVER['SERVER_NAME'];
-        if ($_SERVER['SERVER_PORT'] != '80') 
-            self::$url = self::$url.':'.$_SERVER['SERVER_PORT'];
+        // Check whether we are using HTTPS or not 
+        if (isset($_SERVER['HTTPS']))
+        {
+            if ('on' == strtolower($_SERVER['HTTPS']) OR '1' == $_SERVER['HTTPS'])
+            {
+                self::$url = 'https://'.$_SERVER['SERVER_NAME'];
+            }
+        }
+        elseif (isset($_SERVER['SERVER_PORT']) AND ('443' == $_SERVER['SERVER_PORT']))
+        {
+            self::$url = 'https://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+        }
+        else
+        {
+            self::$url = 'http://'.$_SERVER['SERVER_NAME'];
+
+            if ($_SERVER['SERVER_PORT'] != '80') 
+                self::$url = self::$url.':'.$_SERVER['SERVER_PORT'];
+        }
 
         //getting the folder, erasing the index
         self::$folder = str_replace('/index.php','', $_SERVER['SCRIPT_NAME']).'/';
@@ -136,9 +152,9 @@ class install{
                                     'mandatory' => TRUE,
                                     'result'    => (is_dir(APPPATH) AND is_file(APPPATH.'bootstrap'.EXT))
                                     ),
-                'PHP'   =>array('message'   => 'PHP 5.5 or newer required, this version is '. PHP_VERSION,
+                'PHP'   =>array('message'   => 'PHP 5.6 or newer required, this version is '. PHP_VERSION,
                                     'mandatory' => TRUE,
-                                    'result'    => version_compare(PHP_VERSION, '5.5', '>=')
+                                    'result'    => version_compare(PHP_VERSION, '5.6', '>=')
                                     ),
                 'mod_rewrite'=>array('message'  => $mod_msg,
                                     'mandatory' => FALSE,
@@ -503,7 +519,7 @@ class core{
     public static function generate_password ($length = 16)
     {
         // define possible characters
-        $possible = '23456789+@%$*abcdefghjkmnpqrstuvwxyz';
+        $possible = '23456789@%$*abcdefghjkmnpqrstuvwxyz';
         $possible_length = strlen($possible)-1;
 
         // add random characters to $password until $length is reached

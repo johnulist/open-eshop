@@ -6,7 +6,7 @@
 <div class="page-header">
     <h1><?=__('Email Configuration')?></h1>
     <p><?=__('List of general configuration values. Replace input fields with new desired values')?></p>
-    <p>How to configure <a href="http://open-classifieds.com/2014/02/12/configure-elasticemail-open-classifieds/">ElasticEmail</a></p>
+    <p>How to configure <a target="_blank" href="https://docs.open-eshop.com/elasticemail/">ElasticEmail</a></p>
 </div>
 
 <div class="row">
@@ -36,6 +36,22 @@
                         </div>
                         
                         <div class="form-group">
+                            <?= FORM::label($forms['notify_name']['key'], __('Notify name'), array('class'=>'control-label col-sm-4', 'for'=>$forms['notify_name']['key']))?>
+                            <div class="col-sm-8">
+                                <?= FORM::input($forms['notify_name']['key'], $forms['notify_name']['value'], array(
+                                'placeholder' => "no-reply ".core::config('general.site_name'), 
+                                'class' => 'tips form-control', 
+                                'id' => $forms['notify_name']['key'], 
+                                'data-content'=> __("Name from where we send the emails, also used for software communications."),
+                                'data-trigger'=>"hover",
+                                'data-placement'=>"right",
+                                'data-toggle'=>"popover",
+                                'data-original-title'=>__("Name From"),
+                                ))?> 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <?= FORM::label($forms['new_sale_notify']['key'], __('Notify me on new sale'), array('class'=>'control-label col-sm-4', 'for'=>$forms['new_sale_notify']['key']))?>
                             <div class="col-sm-8">
                                 <div class="onoffswitch">
@@ -63,7 +79,7 @@
                     <div class="form-horizontal">
                         <div class="form-group">
                             <div class="col-sm-8 col-sm-offset-4">
-                                <a class="btn btn-success" href="http://j.mp/elasticemailoc" target="_blank" onclick='setCookie("elastic_alert",1,365)' >Sign Up ElasticEmail $5 Free</a>
+                                <a class="btn btn-success" href="http://j.mp/elasticemailoc" target="_blank" onclick='setCookie("elastic_alert",1,365)' >Sign Up ElasticEmail 150K emails free per month</a>
                             </div>  
                         </div>  
                         <div class="form-group">
@@ -172,24 +188,19 @@
                             ))?> 
                         </div>
                     </div>
-                    
                     <div class="form-group">
-                        <?= FORM::label($forms['smtp_ssl']['key'], __('Smtp ssl'), array('class'=>'control-label col-sm-4', 'for'=>$forms['smtp_ssl']['key']))?>
+                        <?= FORM::label($forms['smtp_secure']['key'], __('Smtp secure'), array('class'=>'control-label col-sm-4', 'for'=>$forms['smtp_secure']['key']))?>
                         <div class="col-sm-8">
-                            <div class="onoffswitch">
-                                <?= FORM::hidden($forms['smtp_ssl']['key'], 0);?>
-                                <?= Form::checkbox($forms['smtp_ssl']['key'], 1, (bool) $forms['smtp_ssl']['value'], array(
-                                'placeholder' => "TRUE or FALSE", 
-                                'class' => 'onoffswitch-checkbox', 
-                                'id' => $forms['smtp_ssl']['key'], 
-                                'data-content'=> '',
-                                'data-trigger'=>"hover",
-                                'data-placement'=>"right",
-                                'data-toggle'=>"popover",
-                                'data-original-title'=>'',                     
-                                ))?>
-                                <?= FORM::label($forms['smtp_ssl']['key'], "<span class='onoffswitch-inner'></span><span class='onoffswitch-switch'></span>", array('class'=>'onoffswitch-label', 'for'=>$forms['smtp_ssl']['key']))?>
-                            </div>
+                            <?= FORM::select($forms['smtp_secure']['key'], array(''=>__("None"),'ssl'=>'SSL','tls'=>'TLS'), $forms['smtp_secure']['value'], array(
+                            'placeholder' => $forms['smtp_secure']['value'], 
+                            'class' => 'tips form-control input-sm ', 
+                            'id' => $forms['smtp_secure']['key'],
+                            'data-content'=> __("Smtp secure"),
+                            'data-trigger'=>"hover",
+                            'data-placement'=>"right",
+                            'data-toggle'=>"popover",
+                            'data-original-title'=>__("Smtp secure"), 
+                            ))?> 
                         </div>
                     </div>
                     <div class="form-group">

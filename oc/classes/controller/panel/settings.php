@@ -25,7 +25,7 @@ class Controller_Panel_Settings extends Auth_Controller {
      * captcha, uploading text file  
      * @return [view] Renders view with form inputs
      */
-	public function action_product()
+    public function action_product()
     {
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__('product')));
         $this->template->title = __('product');
@@ -128,6 +128,7 @@ class Controller_Panel_Settings extends Auth_Controller {
         {
             $validation =   Validation::factory($this->request->post())
             ->rule('notify_email', 'email')
+            ->rule('notify_name', 'not_empty')
             ->rule('new_sale_notify', 'range', array(':value', 0, 1))
             ->rule('elastic_active', 'range', array(':value', 0, 1))
             ->rule('smtp_active', 'range', array(':value', 0, 1))
@@ -204,7 +205,7 @@ class Controller_Panel_Settings extends Auth_Controller {
         }
         
         //not updatable fields
-        $do_nothing = array('menu','locale','allow_query_language','charset','minify','api_key');
+        $do_nothing = array('menu','locale','allow_query_language','charset','minify','api_key','cron');
 
         // save only changed values
         if($this->request->post())
@@ -213,6 +214,7 @@ class Controller_Panel_Settings extends Auth_Controller {
             ->rule('maintenance', 'range', array(':value', 0, 1))
             ->rule('disallowbots', 'range', array(':value', 0, 1))
             ->rule('cookie_consent', 'range', array(':value', 0, 1))
+            ->rule('private_site', 'range', array(':value', 0, 1))
             ->rule('site_name', 'not_empty')
             ->rule('eu_vat', 'range', array(':value', 0, 1))
             ->rule('products_per_page', 'not_empty')
@@ -235,8 +237,7 @@ class Controller_Panel_Settings extends Auth_Controller {
             ->rule('blog', 'range', array(':value', 0, 1))
             ->rule('faq', 'range', array(':value', 0, 1))
             ->rule('forums', 'range', array(':value', 0, 1))
-            ->rule('sort_by', 'not_empty')
-            ->rule('aws_s3_active', 'range', array(':value', 0, 1));
+            ->rule('sort_by', 'not_empty');
             
             if ($validation->check())
             {
@@ -250,7 +251,13 @@ class Controller_Panel_Settings extends Auth_Controller {
                             $c->config_value = Kohana::$_POST_ORIG[$c->config_key];
                         else
                             $c->config_value = $config_res;
-    
+
+                        if ($c->config_key == 'maintenance' AND $c->config_value == 0)
+                            Alert::del('maintenance');
+
+                        if ($c->config_key == 'private_site' AND $c->config_value == 0)
+                            Alert::del('private_site');
+
                         try {
                             $c->save();
                         } catch (Exception $e) {

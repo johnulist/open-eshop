@@ -165,11 +165,11 @@ class Model_Order extends ORM {
      * @param string    $id_order [unique indentifier of order]
      * @param string    $txn_id id of the transaction depending on provider
      */
-    public function confirm_payment($paymethod = 'paypal', $txn_id = NULL, $pay_date = NULL , $amount = NULL, $currency = NULL )
+    public function confirm_payment($paymethod = 'paypal', $txn_id = NULL, $pay_date = NULL , $amount = NULL, $currency = NULL , $fee = NULL)
     { 
         
         // update orders
-        if($this->loaded())
+        if($this->loaded() AND $this->status != self::STATUS_PAID)
         {
             $product = $this->product;
             $user    = $this->user;
@@ -187,6 +187,18 @@ class Model_Order extends ORM {
 
             if ($currency!==NULL)
                 $this->currency = $currency;
+
+            //get gateway fee
+            $this->gateway_fee = ($fee!==NULL)?$fee:0;
+           
+            //get VAT paid
+            if ($this->VAT > 0)
+                $this->VAT_amount = $this->amount - (100*$this->amount)/(100+$this->VAT);
+            else
+                $this->VAT_amount = 0;
+
+            //calculate net amount
+            $this->amount_net = $this->amount - $this->gateway_fee - $this->VAT_amount;
 
             try {
                 $this->save();
@@ -207,9 +219,9 @@ class Model_Order extends ORM {
             //loop all the licenses to an string
             if (count($licenses)>0)
             {
-                $license = '\n\n==== '.__('Your Licenses').' ====';
+                $license = '<br><br>==== '.__('Your Licenses').' ====';
                 foreach ($licenses as $l) 
-                    $license.='\n'.$l->license;
+                    $license.='<br>'.$l->license;
             }
 
             //download link
@@ -217,7 +229,7 @@ class Model_Order extends ORM {
             if ($product->has_file()==TRUE)
             {
                 $dwnl_link = $user->ql('oc-panel',array('controller'=>'profile','action'=>'download','id'=>$this->id_order));
-                $download = '\n\n==== '.__('Download').' ====\n<a href="'.$dwnl_link.'">'.$dwnl_link.'</a>';
+                $download = '<br><br>==== '.__('Download').' ====<br><a href="'.$dwnl_link.'">'.$dwnl_link.'</a>';
             }
                 
             
@@ -234,7 +246,7 @@ class Model_Order extends ORM {
                 elseif ( $expire_times > 0)
                     $expire = sprintf(__('Can be downloaded %u times.'),$expire_times);
 
-                $expire = '\n'.$expire;
+                $expire = '<br>'.$expire;
             }
             
             //param for sale email
@@ -467,7 +479,7 @@ class Model_Order extends ORM {
                     'currency'          => $this->currency,
                     'emailAddress'      => $this->user->email,
                     'paymentMode'       => 'others',
-                    'sessionId'         => session_id(),
+                    'flpChecksum'       => Core::cookie('flp_checksum',session_id()),
                 ));
 
                 $fraud_result_status = $fraud_result->fraudlabspro_status;

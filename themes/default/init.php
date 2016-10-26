@@ -3,7 +3,7 @@
   * Theme Name: Kamaleon Free
   * Description: Free theme, HTML5. Default base, link on footer.
   * Tags: HTML5, Advanced Confiuration, prettyPhoto, Slider.
-  * Version: 2.0.0
+  * Version: 2.5.0
   * Author: Chema <chema@open-classifieds.com>
   * License: GPL v3
   */
@@ -27,8 +27,8 @@ Theme::load();
 
 //local files
     $theme_css = array(
-                        '//netdna.bootstrapcdn.com/bootswatch/3.3.4/yeti/bootstrap.min.css' => 'screen',
-                        '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' => 'screen',
+                        '//cdn.jsdelivr.net/bootswatch/3.3.6/yeti/bootstrap.min.css' => 'screen',
+                        '//cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css' => 'screen',
                         '//cdn.jsdelivr.net/chosen/1.0.0/chosen.css' => 'screen',
                         '//cdn.jsdelivr.net/prettyphoto/3.1.5/css/prettyPhoto.css' => 'screen',
                         'css/style.css?v='.Core::VERSION => 'screen',
@@ -40,13 +40,11 @@ Theme::load();
 
     Theme::$styles = $theme_css;
 
-    Theme::$scripts['footer']   = array('//code.jquery.com/jquery-1.10.2.min.js',
-                                        '//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
+    Theme::$scripts['footer'] = array(  '//cdn.jsdelivr.net/g/jquery@1.12.3,bootstrap@3.3.6,chosen@1.0.0,jquery.validation@1.11.1,holder@2.8.1',
                                         '//cdn.jsdelivr.net/prettyphoto/3.1.5/js/jquery.prettyPhoto.js',
-                                        '//cdn.jsdelivr.net/chosen/1.0.0/chosen.jquery.min.js',
-                                        Route::url('jslocalization', array('controller'=>'jslocalization', 'action'=>'chosen')),
                                         'js/bootstrap-slider.js',
-                                        'js/jquery.validate.min.js',
+                                        'js/curry.js',
+                                        Route::url('jslocalization', array('controller'=>'jslocalization', 'action'=>'chosen')),
                                         Route::url('jslocalization', array('controller'=>'jslocalization', 'action'=>'validate')),
                                         'js/theme.init.js?v='.Core::VERSION,
                                         );

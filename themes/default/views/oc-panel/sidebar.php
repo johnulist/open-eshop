@@ -27,6 +27,7 @@
                                         <?endif?>
                                         <tr><td class="br"><?=Theme::admin_link(__('Coupons'), 'coupon','index','oc-panel','glyphicon glyphicon-tag')?></td></tr>
                                         <tr><td class="br"><?=Theme::admin_link(__('Downloads'), 'download','index','oc-panel','glyphicon glyphicon-download-alt')?></td></tr>
+                                        <tr><td class="br"><?=Theme::admin_link(__('Licenses'), 'license','index','oc-panel','glyphicon glyphicon-barcode')?></td></tr>
                                         <?if (core::config('product.reviews')==1):?>
                                             <tr><td class="br"><?=Theme::admin_link(__('Reviews'), 'review','index','oc-panel','glyphicon glyphicon-star-empty')?></td></tr>
                                         <?endif?>
@@ -80,7 +81,8 @@
                                             <tr><td class="br"><?=Theme::admin_link(__('Forums'),'forum','index','oc-panel','glyphicon glyphicon-tags')?></td></tr>
                                             <tr><td class="br"><?=Theme::admin_link(__('Topics'), 'topic','index','oc-panel','glyphicon glyphicon-pencil')?></td></tr>
                                         <?endif?>
-                                    </table>
+                                         <tr><td class="br"><?=Theme::admin_link(__('CMS Images'), 'cmsimages','index','oc-panel','glyphicon glyphicon-camera')?></td></tr>
+                                   </table>
                                 </div>
                             </div>
                         </div>

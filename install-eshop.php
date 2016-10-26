@@ -50,7 +50,7 @@ class install{
      * Software install settings
      * @var string
      */
-    const VERSION   = '2.0.0';
+    const VERSION   = '2.5.0';
 
     /**
      * message to notify
@@ -93,9 +93,9 @@ class install{
                                         'mandatory' => TRUE,
                                         'result'    => (is_writable(DOCROOT))
                                         ),
-                'PHP'   =>array('message'   => 'PHP 5.5 or newer required, this version is '. PHP_VERSION,
+                'PHP'   =>array('message'   => 'PHP 5.6 or newer required, this version is '. PHP_VERSION,
                                     'mandatory' => TRUE,
-                                    'result'    => version_compare(PHP_VERSION, '5.5', '>=')
+                                    'result'    => version_compare(PHP_VERSION, '5.6', '>=')
                                     ),
                 'mod_rewrite'=>array('message'  => $mod_msg,
                                     'mandatory' => FALSE,
@@ -475,7 +475,7 @@ function __($msgid)
 
     </style>
         
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.3.0/yeti/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/bootswatch/3.3.6/yeti/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chosen/1.1.0/chosen.min.css">
 
 </head>
@@ -646,7 +646,7 @@ function __($msgid)
     </div> 
     
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/jquery.bootstrapvalidation/1.3.7/jqBootstrapValidation.min.js"></script>
     <script src="//cdn.jsdelivr.net/chosen/1.1.0/chosen.jquery.min.js"></script>
 
